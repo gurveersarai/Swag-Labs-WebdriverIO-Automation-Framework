@@ -31,6 +31,12 @@ describe('Login Page', () => {
         await expect (errorMessage).toContain("Epic sadface: Username and password do not match any user in this service");
         
     })
+
+    it('should not be able to login with an empty username and password', async () => {
+        await loginPage.login("", "");
+        const errorMessage = await loginPage.errorMessage();
+        await expect(errorMessage).toContain("Epic sadface: Username is required");
+    })
     
 
 

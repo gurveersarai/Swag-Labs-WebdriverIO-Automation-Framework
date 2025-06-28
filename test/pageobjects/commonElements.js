@@ -37,9 +37,12 @@ class commonElements extends loginPage   {
 
     async openLoggedIn() {
         await browser.url('/');
-        //await loginPage.login("locked_user", "secret_sauce")
         await this.login("standard_user", "secret_sauce")
 }
+    async getpageURL() {
+        const url = await browser.getUrl();
+        return url;
+    }
 }
 
 export default new commonElements();

@@ -9,11 +9,20 @@ class ProductPage {
     get productContainers() {
         return $$('.inventory_item');
     }
+
+    get productItemLink() {
+        return $$('.inventory_item_name');
+    }
+    
+    get productImg() {
+        return $$('.inventory_item_img');
+    }
+
     async productNames() {
         
-        for (let i = 0; i < this.productContainers.length; i++) {
+        for (let i = 0; i < await this.productContainers.length; i++) {
             const itemName = await this.productContainers[i].$('.inventory_item_name').getText();
-            console.log(`Product Name: ${itemName}`);
+             console.log(`Product Name:  ${itemName}`);
         }
     }
 

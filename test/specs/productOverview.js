@@ -16,9 +16,10 @@ describe("Add Products from Overview Page", async() => {
         expect(await productOverviewPage.productContainers).toBeDisplayed();
     })
 
-    it("should be able to print all the product names on the overview page"), async() => {
+    it("should be able to print all the product names on the overview page", async() => {
+        await browser.pause(5000);
         await productOverviewPage.productNames();
-    }
+    })
 
     it("should be able to add all items to the cart", async() => {
         const count = await productOverviewPage.addAllProducts();
@@ -31,5 +32,6 @@ describe("Add Products from Overview Page", async() => {
         const itemContainer = await $$('.inventory_item');
         await itemContainer[0].$('.btn_inventory').click();
         expect (cartIconCount).toBeGreaterThan(cartIconCount - 1);
+        await browser.pause(5000); // Pause to see the change in cart icon count
     }) 
 })
