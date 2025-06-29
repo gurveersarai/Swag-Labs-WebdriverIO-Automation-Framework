@@ -1,14 +1,15 @@
 import { browser, expect } from '@wdio/globals'
-import loginPage from '../pageobjects/login.page.js'
+import loginPage from '../pageobjects/login.page';
 import commonElements from '../pageobjects/commonElements.js'
 
+
 describe('Login Page', () => {
-    before(async () => {
+    beforeEach(async () => {
         await commonElements.open();
     },
     afterEach(async () => {
         await browser.reloadSession();
-        await commonElements.open();
+        
     })
     )
     it('should login with valid credentials', async () => {

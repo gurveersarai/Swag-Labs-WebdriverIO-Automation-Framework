@@ -4,14 +4,14 @@ import productOverviewPage from '../pageobjects/productOverview.page';
 import productDetailsPage from '../pageobjects/productDetails.page';
 
 describe("Product Details Page", async() => {
-    before(async()=> {
+    beforeEach(async()=> {
         await commonElements.openLoggedIn();
         await productOverviewPage.productPagetitle.waitForDisplayed();
     }),
     afterEach(async () => {
         await browser.reloadSession();
-        await commonElements.openLoggedIn();
-        await productOverviewPage.productPagetitle.waitForDisplayed();
+        //await commonElements.openLoggedIn();
+        //await productOverviewPage.productPagetitle.waitForDisplayed();
     }),
 
     it('should be able to click onto item name and be navigated to the details page', async() => {
@@ -28,28 +28,26 @@ describe("Product Details Page", async() => {
 
     it('should be able to retrieve product details on the details page', async() => {
         await productOverviewPage.productImg[0].click();
-        await browser.waitUntil(async () => {
-            await productDetailsPage.productImage.isDisplayed()
-        }), {
-            timeout: 5000,
-            timeoutMsg: 'Product details page has not loaded properly'
-        }
+        await productDetailsPage.productImage.isDisplayed()
+
         const details = await productDetailsPage.productDetails();
         console.log(`Product Details: ${JSON.stringify(details)}`);
-        await expect (details).to.have.all.keys('name', 'price', 'description')
-    }),
+        expect(details).toHaveProperty('name');
+        expect(details).toHaveProperty('price');
+        expect(details).toHaveProperty('description');  
+    })
 
     it('should be able to add a product to the cart from the details page', async() => {
         await productOverviewPage.productImg[0].click();
         const initialCartCount = await commonElements.numberofItemsInCart();
-        await productDetailsPage.addToCartButton.click();
+        await productDetailsPage.addToCart();
         const updatedCartCount = await commonElements.numberofItemsInCart();
         expect(updatedCartCount).toBe(initialCartCount + 1);
-    }),
+    })
 
     it('should be able to navigate back to the overview page', async() => {
         await productOverviewPage.productImg[0].click();
-        await productDetailsPage.backToProductsButton.click();
+        await productDetailsPage.goBacktoProductOverview();
         expect(await commonElements.getpageURL()).toContain('/inventory.html');
         await expect(productOverviewPage.productPagetitle).toBeDisplayed();
     })

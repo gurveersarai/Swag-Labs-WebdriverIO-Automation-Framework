@@ -1,6 +1,6 @@
 import { browser } from '@wdio/globals'
 
-class ProductPage {
+class productPage {
 
     get productPagetitle() {
         return $('span.title');
@@ -53,4 +53,4 @@ class ProductPage {
 
 }
 
-export default new ProductPage();
+export default new productPage();

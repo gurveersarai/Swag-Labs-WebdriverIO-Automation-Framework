@@ -1,13 +1,13 @@
-import loginPage from "./login.page"
-
-class commonElements extends loginPage   {
+import loginPage from './login.page';
+const loginPage = new loginPage();
+class commonElements{
 
     get hamburgerMenu() {
         return $('#react-burger-menu-btn')
     }
 
     get cartIcon() {
-        return $('#shopping_cart_container')
+         return $('#shopping_cart_container')
     }
 
     get closeMenuIcon() {
@@ -18,9 +18,25 @@ class commonElements extends loginPage   {
         return $('#logout_sidebar_link')
     }
 
+    get pageTitle() {
+        return $('.title')
+    }
+
+    get cancelButton() {
+        return $('#cancel')
+    }
+
     async numberofItemsInCart() {
-        const cartValue = await $('[class="shopping_cart_link"] span').getText()
-        return Number(cartValue);
+        const cartIcon = await $('a[class="shopping_cart_link"]')
+        if (!(await cartIcon.$('span').isDisplayed())) {
+            console.log("No items in the cart");
+            return 0;
+        }
+        else {
+            let cartValue = await cartIcon.$('span').getText();
+            return Number(cartValue);
+        }
+        
     }
 
     async headerText() {
@@ -37,7 +53,8 @@ class commonElements extends loginPage   {
 
     async openLoggedIn() {
         await browser.url('/');
-        await this.login("standard_user", "secret_sauce")
+        await loginPage.login("standard_user", "secret_sauce")
+        
 }
     async getpageURL() {
         const url = await browser.getUrl();

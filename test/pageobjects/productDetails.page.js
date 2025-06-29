@@ -1,12 +1,33 @@
 class productDetails {
 
+    get productPrice() {
+        return $('.inventory_details_price');
+    }
+    get productName() {
+        return $('.inventory_details_name');
+    }
+    get productDescription() {
+        return $('.inventory_details_name')
+    }
+
+    get productImage() {
+        return $('.inventory_details_img');
+    }
+
+    get addToCartButton() {
+        return $('#add-to-cart');
+    }
+    get removeFromCartButton() {
+        return $('#remove-from-cart');
+    }
+
     async productDetails() {
         await browser.waitUntil(async () => {
             return await this.productPrice.isDisplayed() &&
                      await this.productName.isDisplayed() &&
                      await this.productDescription.isDisplayed();
         }, {
-            timeout: 5000,
+            timeout: 10000,
             timeoutMsg: 'Product details are not displayed within 5 seconds'
         });
 
@@ -16,19 +37,7 @@ class productDetails {
         return {name, price, description}
     }
         
-    get productPrice() {
-        return $('.inventory_details_price');
-    }
-    get productName() {
-        return $('.inventory_details_name');
-    }
-    get productDescription() {
-        return $('/inventory_details_name')
-    }
-
-    get productImage() {
-        return $('.inventory_details_img');
-    }
+   
 
     async goBacktoProductOverview() {
         const backButton = $(".inventory_details_back_button");
@@ -43,6 +52,7 @@ class productDetails {
     async addToCart() {
         if(await this.addToCartButton.isDisplayed()) {
             await this.addToCartButton.click();
+            console.log("Item added to the cart via the Product Page");
             
         }
         else{

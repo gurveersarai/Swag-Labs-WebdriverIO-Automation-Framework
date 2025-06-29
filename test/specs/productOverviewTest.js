@@ -8,8 +8,8 @@ describe("Add Products from Overview Page", async() => {
     })
 
     it("should be able to see the product title on the overview page", async() => {
-        await productOverviewPage.productPagetitle.waitForDisplayed();
-        expect(await productOverviewPage.productPagetitle.getText()).toContain("Products");
+        await commonElements.pageTitle.waitForDisplayed();
+        expect(await commonElements.pageTitle.getText()).toContain("Products");
     })
 
     it("should be able to see products on the overview page", async() => {
