@@ -1,3 +1,10 @@
+import fs from 'fs';
+import os from 'os';
+import path from 'path';   
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
 export const config = {
     //
     // ====================
@@ -22,9 +29,7 @@ export const config = {
     // of the config file unless it's absolute.
     //
     specs: [
-        //'./test/specs/**/*.js'
-        './test/specs/productDetailsTest.js',
-        //'./test/specs/checkoutConfirmationTest.js'
+        './test/specs/**/*.js'
     ],
     // Patterns to exclude.
     exclude: [
@@ -126,13 +131,18 @@ export const config = {
     // Test reporter for stdout.
     // The only one supported by default is 'dot'
     // see also: https://webdriver.io/docs/dot-reporter
-    reporters: ['spec'],
+    reporters: [['allure', {
+        outputDir: 'allure-results',
+        disableWebdriverStepsReporting: true,
+        disableWebdriverScreenshotsReporting: false,
+    }]],
 
     // Options to be passed to Mocha.
     // See the full list at http://mochajs.org/
     mochaOpts: {
         ui: 'bdd',
-        timeout: 60000
+        timeout: 60000,
+        retries: 1,
     },
 
     //
@@ -148,8 +158,19 @@ export const config = {
      * @param {object} config wdio configuration object
      * @param {Array.<Object>} capabilities list of capabilities details
      */
-    // onPrepare: function (config, capabilities) {
-    // },
+     onPrepare: function () {
+        
+        const env = {
+            Project: process.env.PROJECT || 'Swag Labs WebdriverIO Project',
+            Environment: process.env.TEST_ENV || 'local',
+            Browser: process.env.BROWSER || 'chrome',
+            Platform: os.platform(),
+            PlatformVersion: os.release(),
+        }
+        const content = Object.entries(env).map(([k, v]) => `${k}: ${v}`).join('\n');
+        fs.writeFileSync(path.join(__dirname, 'allure-results', 'environment.properties'), content);
+        
+     },
     /**
      * Gets executed before a worker process is spawned and can be used to initialize specific service
      * for that worker as well as modify runtime environments in an async fashion.
@@ -229,8 +250,12 @@ export const config = {
      * @param {boolean} result.passed    true if test has passed, otherwise false
      * @param {object}  result.retries   information about spec related retries, e.g. `{ attempts: 0, limit: 0 }`
      */
-    // afterTest: function(test, context, { error, result, duration, passed, retries }) {
-    // },
+     afterTest: async function(test, context, { error, result, duration, passed, retries }) {
+        if (!passed) {
+            const screenshot = await browser.screenshot();
+            allure.addAttachment('Screenshot', Buffer.from(screenshot, 'base64'), 'image/png');
+        }
+     },
 
 
     /**

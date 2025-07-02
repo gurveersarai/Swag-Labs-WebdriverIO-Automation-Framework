@@ -8,11 +8,11 @@ describe("Logout Functionality", () => {
         await loginPage.login("standard_user", "secret_sauce");
 
     })
-    it("should be able to open the hamburger menu", async() => {
-        await commonElements.hamburgerMenu.click();
-    }),
-
+    after(async () => {
+        await browser.reloadSession();
+    })
     it('should be able to see the Logout Link present', async() => {
+        await commonElements.hamburgerMenu.click();
         expect (await commonElements.logoutLink).toBeDisplayed();
         const linkText = await commonElements.logoutLink.getText();
         expect (await linkText).toContain('Logout');

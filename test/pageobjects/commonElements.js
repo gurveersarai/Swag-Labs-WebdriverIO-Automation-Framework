@@ -1,5 +1,5 @@
 import loginPage from './login.page';
-const loginPage = new loginPage();
+
 class commonElements{
 
     get hamburgerMenu() {

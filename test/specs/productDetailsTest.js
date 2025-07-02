@@ -8,11 +8,11 @@ describe("Product Details Page", async() => {
         await commonElements.openLoggedIn();
         await productOverviewPage.productPagetitle.waitForDisplayed();
     }),
-    afterEach(async () => {
-        await browser.reloadSession();
-        //await commonElements.openLoggedIn();
-        //await productOverviewPage.productPagetitle.waitForDisplayed();
-    }),
+    // afterEach(async () => {
+    //     await browser.reloadSession();
+    //     //await commonElements.openLoggedIn();
+    //     //await productOverviewPage.productPagetitle.waitForDisplayed();
+    // }),
 
     it('should be able to click onto item name and be navigated to the details page', async() => {
         await productOverviewPage.productItemLink[0].click();

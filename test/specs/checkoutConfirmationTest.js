@@ -4,21 +4,18 @@ import commonElements from "../pageobjects/commonElements";
 import cartPage from "../pageobjects/cart.page";
 import checkoutPage from "../pageobjects/checkout.page";
 import productOverviewPage from "../pageobjects/productOverview.page";
+import checkoutOverview from "../helpers/checkoutOverview";
 
 describe('Checkout Overview Page Functionality', async () => {
-    beforeEach(async () => {
-        await commonElements.openLoggedIn();
-        await productOverviewPage.productPagetitle.waitForDisplayed();
-        await productOverviewPage.addAllProducts();
-        await commonElements.cartIcon.click();
-        await cartPage.checkoutButton.click();
-        await checkoutPage.enterFormDetails('John', 'Doe', '12345');
-        await checkoutPage.continueButton.click();
+    beforeEach(async function () {
+        this.timeout(40000);
+        await checkoutOverview.goToCheckoutOverview();
+        console.log('Navigated to Checkout Overview Page'); 
     });
 
-    afterEach(async () => {
-        await browser.reloadSession();
-    });
+    // afterEach(async () => {
+    //     await browser.reloadSession();
+    // });
 
     it('should be able to see the page title', async() => {
         const pageTitle = await commonElements.pageTitle.getText();
@@ -32,6 +29,7 @@ describe('Checkout Overview Page Functionality', async () => {
 
     it('should be able to proceed to the confirmation page', async() => {
         await checkoutOverviewPage.finishButton.click();
+        await checkoutCompletePage.pageHeaderText.waitForDisplayed();
         console.log(await checkoutCompletePage.pageHeaderText.getText());
         console.log(await checkoutCompletePage.completeText.getText());
         expect(await commonElements.getpageURL()).toContain('checkout-complete.html');
@@ -41,6 +39,7 @@ describe('Checkout Overview Page Functionality', async () => {
     it('should be able to navigate back to the homepage after purchasing', async() => {
         await checkoutOverviewPage.finishButton.click();
         await checkoutCompletePage.backHomeButton.click();
+        await productOverviewPage.productContainers[0].waitForDisplayed();
         expect(await commonElements.getpageURL()).toContain('inventory.html');
         expect(await productOverviewPage.productPagetitle.isDisplayed()).toBe(true);
     })

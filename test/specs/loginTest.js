@@ -7,10 +7,10 @@ describe('Login Page', () => {
     beforeEach(async () => {
         await commonElements.open();
     },
-    afterEach(async () => {
-        await browser.reloadSession();
+    // afterEach(async () => {
+    //     await browser.reloadSession();
         
-    })
+    // })
     )
     it('should login with valid credentials', async () => {
         await expect(browser).toHaveTitle('Swag Labs');
