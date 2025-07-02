@@ -1,8 +1,6 @@
 import checkoutCompletePage from "../pageobjects/checkoutComplete.page";
 import checkoutOverviewPage from "../pageobjects/checkoutOverview.page";
 import commonElements from "../pageobjects/commonElements";
-import cartPage from "../pageobjects/cart.page";
-import checkoutPage from "../pageobjects/checkout.page";
 import productOverviewPage from "../pageobjects/productOverview.page";
 import checkoutOverview from "../helpers/checkoutOverview";
 
@@ -12,10 +10,6 @@ describe('Checkout Overview Page Functionality', async () => {
         await checkoutOverview.goToCheckoutOverview();
         console.log('Navigated to Checkout Overview Page'); 
     });
-
-    // afterEach(async () => {
-    //     await browser.reloadSession();
-    // });
 
     it('should be able to see the page title', async() => {
         const pageTitle = await commonElements.pageTitle.getText();

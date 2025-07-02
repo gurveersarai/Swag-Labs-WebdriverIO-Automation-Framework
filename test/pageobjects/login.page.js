@@ -1,13 +1,9 @@
 import { $ } from '@wdio/globals'
 import Page from './productOverview.page.js';
 
-/**
- * sub page containing specific selectors and methods for a specific page
- */
+
 class loginPage {
-    /**
-     * define selectors using getter methods
-     */
+    
     get inputUsername () {
         return $('#user-name');
     }
@@ -19,13 +15,13 @@ class loginPage {
     get btnSubmit () {
         return $('#login-button');
     }
-
+    // This method is used to open the login page.
     async login(username, password) {
         await this.inputUsername.addValue(username);
         await this.inputPassword.addValue(password);
         await this.btnSubmit.click();
     }
-
+    // returns the error message when login fails
     async errorMessage() {
         const errorMessage = await $('h3[data-test="error"]').getText();
         return errorMessage;

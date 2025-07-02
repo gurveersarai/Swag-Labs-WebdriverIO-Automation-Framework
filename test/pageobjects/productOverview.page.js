@@ -17,7 +17,7 @@ class productPage {
     get productImg() {
         return $$('.inventory_item_img');
     }
-
+    // This method is used to return and print the names of all products on the product overview page.
     async productNames() {
         
         for (let i = 0; i < await this.productContainers.length; i++) {
@@ -25,7 +25,7 @@ class productPage {
              console.log(`Product Name:  ${itemName}`);
         }
     }
-
+    // This method is used to add all products to the cart and return the count of successfully added products.
     async addAllProducts() 
     {
         const itemContainer = await $$('.inventory_item');
@@ -49,8 +49,6 @@ class productPage {
         }
         return count 
     }
-
-
 }
 
 export default new productPage();

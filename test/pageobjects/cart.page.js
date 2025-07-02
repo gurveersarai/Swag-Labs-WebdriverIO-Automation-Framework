@@ -11,7 +11,7 @@ class cartPage {
     get checkoutButton() {
         return $('#checkout');
     }
-    
+    //returns details of the cart items
     async cartItems() {
         const items = await $$('.cart_item');
         let itemDetails = [];
@@ -23,7 +23,7 @@ class cartPage {
         return itemDetails;
 
     }
-
+    //returns the number of items in the cart
     async removeItem(index) {
         let RemoveItemsButton = await $$('.cart_item button')
         await RemoveItemsButton[index].click()

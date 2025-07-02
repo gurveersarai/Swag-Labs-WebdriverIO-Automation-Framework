@@ -1,5 +1,5 @@
 class checkoutOverview {
-
+    // returns details of the payment information on the checkout overview page
     async checkoutPaymentDetails() {
         if (await $('.summary_info').isDisplayed()) {
             const details = () => Promise.all([
@@ -21,8 +21,5 @@ class checkoutOverview {
         return $('#finish');
     }
     }
-
-
-
 
 export default new checkoutOverview();  

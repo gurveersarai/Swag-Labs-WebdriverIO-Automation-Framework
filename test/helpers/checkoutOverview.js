@@ -3,7 +3,6 @@ import productOverviewPage from "../pageobjects/productOverview.page";
 import cartPage from "../pageobjects/cart.page";
 import checkoutPage from "../pageobjects/checkout.page";
 
-
 async function goToCheckoutOverview() {
     await commonElements.openLoggedIn();
         await productOverviewPage.productPagetitle.waitForDisplayed();
@@ -15,4 +14,6 @@ async function goToCheckoutOverview() {
 
 }
 
-export default goToCheckoutOverview();
+export default {
+    goToCheckoutOverview
+}

@@ -11,6 +11,7 @@
   "scripts": {
     "wdio": "wdio run ./wdio.conf.js",
     "clean": "rm -rf ./reports ./allure-results ./allure-report",
-    "generateReport": "allure serve allure-results"
+    "generateReport": "allure serve allure-results",
+    "local" : "TEST_ENV=QA BROWSER=Chrome npx wdio run wdio.conf.js"
   }
 }

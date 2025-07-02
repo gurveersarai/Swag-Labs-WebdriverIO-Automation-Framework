@@ -20,7 +20,7 @@ class productDetails {
     get removeFromCartButton() {
         return $('#remove-from-cart');
     }
-
+    // returns the product details from the product details page
     async productDetails() {
         await browser.waitUntil(async () => {
             return await this.productPrice.isDisplayed() &&
@@ -36,9 +36,7 @@ class productDetails {
         const description = await this.productDescription.getText();
         return {name, price, description}
     }
-        
-   
-
+    // returns the product image URL from the product details page
     async goBacktoProductOverview() {
         const backButton = $(".inventory_details_back_button");
         if (await backButton.isDisplayed()) {
@@ -48,7 +46,7 @@ class productDetails {
             console.log ("Back Button is not displayed")
         }
     }
-
+    //adds the item to the cart from the product details page
     async addToCart() {
         if(await this.addToCartButton.isDisplayed()) {
             await this.addToCartButton.click();
@@ -66,7 +64,5 @@ class productDetails {
         }
     
     }
-
-
 }
 export default new productDetails();

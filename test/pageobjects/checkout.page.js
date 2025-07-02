@@ -27,7 +27,7 @@ class checkoutPage {
     get errorModal() {
         return $('[data-test="error"]')
     }
-
+    
     async enterFormDetails(FirstName,LastName,PostalCode) {
         await this.firstNameInput.setValue(FirstName)
         await this.lastNameInput.setValue(LastName)

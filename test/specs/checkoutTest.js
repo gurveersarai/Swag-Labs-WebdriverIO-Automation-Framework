@@ -1,6 +1,6 @@
 import checkoutPage from "../pageobjects/checkout.page";
 import commonElements from "../pageobjects/commonElements";
-import cartForm from "../helpers/cartForm";
+import checkoutForm from "../helpers/checkoutForm";
 import fs from 'fs'
 import path from "path"
 
@@ -12,7 +12,7 @@ describe("Checkout Page Functionality", async()=> {
 
     beforeEach(async function() {
         this.timeout(40000)
-        await cartForm.goToCheckoutFormPage();
+        await checkoutForm.goToCheckoutFormPage();
     });
 
     it('should have the page title displayed', async() => {
