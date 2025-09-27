@@ -22,7 +22,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run WebdriverIO tests and clean outcome directory
+      - name: Run WebdriverIO tests
         run: npm run test
 
       - name: Generate Allure report
@@ -33,3 +33,10 @@ jobs:
         with:
           name: allure-report
           path: allure-report
+
+      - name: Deploy Allure Report to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GH_PAGES_TOKEN }}
+          publish_dir: ./allure-report
+
