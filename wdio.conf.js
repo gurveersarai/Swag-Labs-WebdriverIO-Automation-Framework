@@ -278,7 +278,7 @@ export const config = {
     { error, result, duration, passed, retries }
   ) {
     if (!passed) {
-      const screenshot = await browser.screenshot();
+      const screenshot = await browser.takeScreenshot();
       allure.addAttachment(
         "Screenshot",
         Buffer.from(screenshot, "base64"),
