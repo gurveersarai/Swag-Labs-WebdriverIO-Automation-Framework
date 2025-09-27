@@ -66,10 +66,12 @@ npx allure open allure-report
 
 ```json
 "scripts": {
-  "test": "wdio run wdio.conf.js",
-  "allure:generate": "allure generate allure-results --clean -o allure-report",
-  "allure:open": "allure open allure-report"
-}
+    "wdio": "wdio run ./wdio.conf.js",
+    "clean": "rimraf ./reports ./allure-results ./allure-report",
+    "test": "npm run clean && npm run wdio",
+    "generateReport": "allure serve allure-results",
+    "local": "TEST_ENV=QA BROWSER=Chrome npx wdio run wdio.conf.js"
+  }
 ```
 
 ---
