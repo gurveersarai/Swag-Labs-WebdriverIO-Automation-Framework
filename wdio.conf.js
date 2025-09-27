@@ -49,19 +49,18 @@ export const config = {
   // and 30 processes will get spawned. The property handles how many capabilities
   // from the same test should run tests.
   //
-  maxInstances: 10,
+
   //
   // If you have trouble getting all important capabilities together, check out the
   // Sauce Labs platform configurator - a great tool to configure your capabilities:
   // https://saucelabs.com/platform/platform-configurator
   //
+  maxInstances: 1,
   capabilities: [
     {
-      maxInstances: 1,
       browserName: "chrome",
       "goog:chromeOptions": {
         args: [
-          "--headless=new",
           "--disable-gpu",
           "--no-sandbox",
           "--disable-dev-shm-usage",
@@ -69,12 +68,13 @@ export const config = {
           "--disable-infobars",
           "--window-size=1920,1080",
           "--disable-popup-blocking",
+          "--start-maximized",
           `--user-data-dir=/tmp/chrome-profiles-${Date.now()}`,
         ],
       },
     },
   ],
-
+  restartBrowserBetweenTests: true, //case sensitive
   //
   // ===================
   // Test Configurations
@@ -82,7 +82,7 @@ export const config = {
   // Define all options that are relevant for the WebdriverIO instance here
   //
   // Level of logging verbosity: trace | debug | info | warn | error | silent
-  logLevel: "debug",
+  logLevel: "info",
   //
   // Set specific log levels per logger
   // loggers:
@@ -160,7 +160,7 @@ export const config = {
   // See the full list at http://mochajs.org/
   mochaOpts: {
     ui: "bdd",
-    timeout: 60000,
+    timeout: 10000,
     retries: 1,
   },
 
@@ -248,7 +248,8 @@ export const config = {
   /**
    * Function to be executed before a test (in Mocha/Jasmine) starts.
    */
-  // beforeTest: function (test, context) {
+  // beforeTest: async function () {
+
   // },
   /**
    * Hook that gets executed _before_ a hook within the suite starts (e.g. runs before calling
@@ -273,24 +274,24 @@ export const config = {
    * @param {object}  result.retries   information about spec related retries, e.g. `{ attempts: 0, limit: 0 }`
    */
   afterTest: async function (
-  test,
-  context,
-  { error, result, duration, passed, retries }
-) {
-  if (!passed && browser && browser.sessionId) {
-    try {
-      const screenshot = await browser.takeScreenshot();
-      allure.addAttachment(
-        "Screenshot",
-        Buffer.from(screenshot, "base64"),
-        "image/png"
-      );
-    } catch (err) {
-      // Optional: log error or ignore, prevents hook from crashing the run
-      console.error("Failed to take screenshot in afterTest:", err.message);
+    test,
+    context,
+    { error, result, duration, passed, retries }
+  ) {
+    if (browser && browser.sessionId) {
+      try {
+        const screenshot = await browser.takeScreenshot();
+        allure.addAttachment(
+          `Screenshot - ${passed ? "Passed" : "Failed"} - ${test.title}`,
+          Buffer.from(screenshot, "base64"),
+          "image/png"
+        );
+      } catch (err) {
+        // Optional: log error or ignore, prevents hook from crashing the run
+        console.error("Failed to take screenshot in afterTest:", err.message);
+      }
     }
-  }
-},
+  },
 
   /**
    * Hook that gets executed after the suite has ended

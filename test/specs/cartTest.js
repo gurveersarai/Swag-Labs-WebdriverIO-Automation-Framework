@@ -3,56 +3,131 @@ import productOverviewPage from "../pageobjects/productOverview.page";
 import cartPage from "../pageobjects/cart.page";
 import checkoutPage from "../pageobjects/checkout.page";
 
-describe('Cart Page', ()=> {
-    before(async () => {
-        await commonElements.openLoggedIn();
-        await productOverviewPage.productPagetitle.waitForDisplayed();
-        await productOverviewPage.addAllProducts();
-        await commonElements.cartIcon.click();
-    })
+describe("Cart Page", () => {
+  before(async () => {
+    try {
+      // Open the site and log in
+      await commonElements.openLoggedIn();
 
-    afterEach(async () => {
-        await browser.reloadSession();
-        await commonElements.openLoggedIn();
-        await productOverviewPage.productPagetitle.waitForDisplayed();
-        await productOverviewPage.addAllProducts();
-        await commonElements.cartIcon.click();
-    })
-
-    it('should be able to navigate to the cart page', async () => {
-        expect(await commonElements.getpageURL()).toContain('/cart.html');
-    }),
-
-    it('should have a page title called Your Cart', async () => {
-        const pageTitle = await cartPage.cartTitle.getText();
-        expect (await pageTitle).toBe('Your Cart');
-    })
-
-
-    it('should be able to see items present in the cart', async () => {
-        const items = await cartPage.cartItems();
-        for (let item of items) {
-            console.log(`Item: ${item.name}, Price: ${item.price}`);
+      // Wait for product page to load
+      await browser.waitUntil(
+        async () => await productOverviewPage.productPagetitle.isDisplayed(),
+        {
+          timeout: 15000,
+          timeoutMsg: "Product page title not displayed after 15s",
         }
-        expect(items.length).toEqual(await commonElements.numberofItemsInCart());
-    })
+      );
 
-    it('should be able to remove an item in the cart', async() => {
-        await cartPage.removeItem(0)
-        const items = await cartPage.cartItems();
-        expect(items.length).toEqual(await commonElements.numberofItemsInCart());
-    }),
+      // Add all products to cart
+      await productOverviewPage.addAllProducts();
 
-     it('should be able to click onto the Continue Shopping button', async() => {
-         await cartPage.continueShoppingButton.click()
-         expect(await commonElements.getpageURL()).toContain('/inventory.html');
-     })
+      // Click on the cart icon
+      await browser.waitUntil(
+        async () => await commonElements.cartIcon.isClickable(),
+        {
+          timeout: 10000,
+          timeoutMsg: "Cart icon not clickable after 10s",
+        }
+      );
+      await commonElements.cartIcon.click();
 
-     it('should be able to proceed to the first page of the checkout', async() => {
-         await cartPage.checkoutButton.click()
-         expect (checkoutPage.checkoutPageTitle).toBeDisplayed()
-     })
+      // Wait for cart page to load
+      await browser.waitUntil(
+        async () => await cartPage.cartTitle.isDisplayed(),
+        {
+          timeout: 15000,
+          timeoutMsg: "Cart title not displayed after 15s",
+        }
+      );
+    } catch (err) {
+      console.error("Setup failed:", err.message);
+      throw err; // Fail the test if setup fails
+    }
+  });
 
-    
+  it("should navigate to the cart page", async () => {
+    const url = await commonElements.getpageURL();
+    expect(url).toContain("/cart.html");
+  });
 
-})
+  it("should have a page title 'Your Cart'", async () => {
+    await browser.waitUntil(
+      async () => await cartPage.cartTitle.isDisplayed(),
+      {
+        timeout: 10000,
+        timeoutMsg: "Cart title not displayed before getting text",
+      }
+    );
+    const pageTitle = await cartPage.cartTitle.getText();
+    expect(pageTitle).toBe("Your Cart");
+  });
+
+  it("should display all items in the cart", async () => {
+    await browser.waitUntil(
+      async () => (await cartPage.cartItems()).length > 0,
+      {
+        timeout: 10000,
+        timeoutMsg: "No items found in the cart after 10s",
+      }
+    );
+
+    const items = await cartPage.cartItems();
+    expect(items.length).toEqual(await commonElements.numberofItemsInCart());
+
+    items.forEach((item) => {
+      console.log(`Item: ${item.name}, Price: ${item.price}`);
+    });
+  });
+
+  it("should remove an item from the cart", async () => {
+    await cartPage.removeItem(0);
+
+    await browser.waitUntil(
+      async () =>
+        (await cartPage.cartItems()).length ===
+        (await commonElements.numberofItemsInCart()),
+      {
+        timeout: 10000,
+        timeoutMsg: "Cart items not updated after removing item",
+      }
+    );
+
+    const items = await cartPage.cartItems();
+    expect(items.length).toEqual(await commonElements.numberofItemsInCart());
+  });
+
+  it("should click the Continue Shopping button", async () => {
+    await browser.waitUntil(
+      async () => await cartPage.continueShoppingButton.isClickable(),
+      {
+        timeout: 10000,
+        timeoutMsg: "Continue Shopping button not clickable",
+      }
+    );
+    await cartPage.continueShoppingButton.click();
+    const url = await commonElements.getpageURL();
+    expect(url).toContain("/inventory.html");
+  });
+
+  it("should proceed to the checkout page", async () => {
+    await commonElements.cartIcon.click();
+    await browser.waitUntil(
+      async () => await cartPage.checkoutButton.isClickable(),
+      {
+        timeout: 10000,
+        timeoutMsg: "Checkout button not clickable",
+      }
+    );
+    await cartPage.checkoutButton.click();
+
+    await browser.waitUntil(
+      async () => await checkoutPage.checkoutPageTitle.isDisplayed(),
+      {
+        timeout: 15000,
+        timeoutMsg: "Checkout page title not displayed after 15s",
+      }
+    );
+
+    expect(await checkoutPage.checkoutPageTitle.isDisplayed()).toBe(true);
+  });
+});
