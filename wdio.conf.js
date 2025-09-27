@@ -273,19 +273,24 @@ export const config = {
    * @param {object}  result.retries   information about spec related retries, e.g. `{ attempts: 0, limit: 0 }`
    */
   afterTest: async function (
-    test,
-    context,
-    { error, result, duration, passed, retries }
-  ) {
-    if (!passed) {
+  test,
+  context,
+  { error, result, duration, passed, retries }
+) {
+  if (!passed && browser && browser.sessionId) {
+    try {
       const screenshot = await browser.takeScreenshot();
       allure.addAttachment(
         "Screenshot",
         Buffer.from(screenshot, "base64"),
         "image/png"
       );
+    } catch (err) {
+      // Optional: log error or ignore, prevents hook from crashing the run
+      console.error("Failed to take screenshot in afterTest:", err.message);
     }
-  },
+  }
+},
 
   /**
    * Hook that gets executed after the suite has ended
